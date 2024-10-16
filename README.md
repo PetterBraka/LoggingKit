@@ -6,5 +6,5 @@ This is a Swift Package that provides a logging functionality for Swift projects
 The package has to be installed using SPM (Swift Package Manager):
 
 ```
-.package(url: "git@github.com:PetterBraka/LoggingKit.git", exact: "<#1.0.0#>")
+.package(url: "git@github.com:PetterBraka/LoggingKit.git", exact: "")
 ```
