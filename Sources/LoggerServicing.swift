@@ -6,5 +6,8 @@
 //
 
 public protocol LoggerServicing {
+    func enable(_ categories: LogCategory...)
+    func disable(_ categories: LogCategory...)
+    
     func log(category: LogCategory, message: String, error: Error?, level: LogLevel)
 }
