@@ -23,6 +23,12 @@ logger.log(category: .database, message: "Opening database", error: nil, level: 
 logger.log(category: .database, message: "Failed to open database", error: error, level: .debug)
 ...
 ```
+Control which categories are being logged. By default all categories will be logged.
+```Swift
+logger.enable(.default) // Enables logging for all categories
+logger.enable(.database, .network)
+logger.disable(.database)
+```
 
 # Install
 The package has to be installed using Swift Package Manager

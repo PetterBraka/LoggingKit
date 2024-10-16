@@ -20,11 +20,21 @@ struct LoggerServiceTests {
     let subsystem = "com.braka.test"
     
     @Test("Test logging", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
-    func testEnablingLogging(for category: LogCategory) {
+    func testLogging(for category: LogCategory) {
         let sut = LoggerService(subsystem: subsystem)
         sut.log(category: category, message: "Test message", error: nil, level: .debug)
         
         #expect(sut.enabledCategories == [.default])
+        #expect(sut.loggers.keys.map { $0 } == [category])
+    }
+    
+    @Test("Test logging for enabling categories", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
+    func testEnablingLogging(for category: LogCategory) {
+        let sut = LoggerService(subsystem: subsystem)
+        sut.enable(category)
+        sut.log(category: category, message: "Test message", error: nil, level: .debug)
+        
+        #expect(sut.enabledCategories == [category])
         #expect(sut.loggers.keys.map { $0 } == [category])
     }
     
