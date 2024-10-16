@@ -1,5 +1,3 @@
-# LoggingKit
-
 This is a Swift Package that provides a logging functionality for Swift projects.
 
 # Install
