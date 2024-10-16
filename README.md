@@ -25,6 +25,7 @@ logger.log(category: .database, message: "Failed to open database", error: error
 ```
 Control which categories are being logged. By default all categories will be logged.
 ```Swift
+logger.enable(.default) // Enables logging for all categories
 logger.enable(.database, .network)
 logger.disable(.database)
 ```
