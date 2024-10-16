@@ -1,13 +1,5 @@
 This is a Swift Package that provides a logging functionality for Swift projects.
 
-# Install
-The package has to be installed using Swift Package Manager
-
-```
-.package(url: "git@github.com:PetterBraka/LoggingKit.git", exact: "")
-```
-![importing-package](importing-package.png)
-
 # TLDR
 Create your instance of `LoggerService`.
 ```Swift
@@ -31,3 +23,11 @@ logger.log(category: .database, message: "Opening database", error: nil, level: 
 logger.log(category: .database, message: "Failed to open database", error: error, level: .debug)
 ...
 ```
+
+# Install
+The package has to be installed using Swift Package Manager
+
+```
+.package(url: "git@github.com:PetterBraka/LoggingKit.git", exact: "")
+```
+![importing-package](importing-package.png)
