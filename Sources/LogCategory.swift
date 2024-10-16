@@ -12,3 +12,9 @@ public struct LogCategory: Sendable, Hashable {
         self.name = name
     }
 }
+
+extension LogCategory {
+    
+    /// Default is used to enable logging of any categories.
+    static let `default` = LogCategory("default")
+}

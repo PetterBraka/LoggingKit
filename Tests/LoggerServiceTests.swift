@@ -17,11 +17,43 @@ extension LogCategory {
 
 @Suite("Test logging service")
 struct LoggerServiceTests {
+    let subsystem = "com.braka.test"
     
-    @Test("Test logging creation", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
-    func testLoggingCreation(category: LogCategory) async throws {
-        let sut = LoggerService(subsystem: "com.braka.test")
+    @Test("Test logging", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
+    func testEnablingLogging(for category: LogCategory) {
+        let sut = LoggerService(subsystem: subsystem)
         sut.log(category: category, message: "Test message", error: nil, level: .debug)
-        #expect(sut.loggers[category] != nil)
+        
+        #expect(sut.enabledCategories == [.default])
+        #expect(sut.loggers.keys.map { $0 } == [category])
+    }
+    
+    @Test("Test logging for disabled categories", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
+    func testDisablingLogging(for category: LogCategory) {
+        let sut = LoggerService(subsystem: subsystem)
+        sut.disable(category)
+        sut.log(category: category, message: "Test message", error: nil, level: .debug)
+        
+        #expect(sut.enabledCategories != [category])
+        #expect(sut.loggers.keys.map { $0 } != [category])
+    }
+    
+    @Test("Test enabling multiple categories")
+    func testEnablingMultipleCategories() async throws {
+        let sut = LoggerService(subsystem: subsystem)
+        sut.enable(.mock, .mock1, .mock2, .mock3)
+        
+        #expect(sut.enabledCategories == [.mock, .mock1, .mock2, .mock3])
+    }
+    
+    @Test("Test disabling multiple categories")
+    func testDisablinggMultipleCategories() async throws {
+        let sut = LoggerService(subsystem: subsystem)
+        sut.enable(.mock, .mock1, .mock2, .mock3)
+        
+        #expect(sut.enabledCategories == [.mock, .mock1, .mock2, .mock3])
+        
+        sut.disable(.mock1, .mock3)
+        #expect(sut.enabledCategories == [.mock, .mock2])
     }
 }
