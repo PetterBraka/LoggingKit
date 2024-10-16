@@ -6,8 +6,13 @@
 //
 
 public protocol LoggerServicing {
+    
+    /// Enable logging for specific categories
     func enable(_ categories: LogCategory...)
+    
+    /// Disable logging for specific categories
     func disable(_ categories: LogCategory...)
     
+    /// Sends a message to the console
     func log(category: LogCategory, message: String, error: Error?, level: LogLevel)
 }
