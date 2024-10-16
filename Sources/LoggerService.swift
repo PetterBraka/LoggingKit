@@ -15,23 +15,25 @@ public final class LoggerService: LoggerServicing {
     public init(subsystem: String) {
         self.subsystem = subsystem
         self.loggers = [:]
-        self.enabledCategories = []
+        self.enabledCategories = [.default]
     }
     
     public func enable(_ categories: LogCategory...) {
+        enabledCategories.remove(.default)
         for category in categories {
             enabledCategories.insert(category)
         }
     }
     
     public func disable(_ categories: LogCategory...) {
+        enabledCategories.remove(.default)
         for category in categories {
             enabledCategories.remove(category)
         }
     }
     
     public func log(category: LogCategory, message: String, error: Error?, level: LogLevel) {
-        guard enabledCategories.contains(category) else { return }
+        guard enabledCategories.contains(category) || enabledCategories == [.default] else { return }
         
         let logger: Logger
         if let oldLogger = loggers[category] {

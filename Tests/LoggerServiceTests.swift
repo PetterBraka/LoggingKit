@@ -19,13 +19,12 @@ extension LogCategory {
 struct LoggerServiceTests {
     let subsystem = "com.braka.test"
     
-    @Test("Test logging for enabled categories", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
+    @Test("Test logging", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
     func testEnablingLogging(for category: LogCategory) {
         let sut = LoggerService(subsystem: subsystem)
-        sut.enable(category)
         sut.log(category: category, message: "Test message", error: nil, level: .debug)
         
-        #expect(sut.enabledCategories == [category])
+        #expect(sut.enabledCategories == [.default])
         #expect(sut.loggers.keys.map { $0 } == [category])
     }
     
