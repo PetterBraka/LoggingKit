@@ -66,4 +66,26 @@ struct LoggerServiceTests {
         sut.disable(.mock1, .mock3)
         #expect(sut.enabledCategories == [.mock, .mock2])
     }
+    
+    @Test("Test logging with set level", arguments: [LogLevel.info, .debug, .default, .fault, .error])
+    func testSettingLogLevel(for level: LogLevel) {
+        let sut = LoggerService(subsystem: subsystem)
+        sut.set(levels: level)
+        sut.log(category: .mock, message: "Test message", error: nil, level: level)
+        
+        #expect(sut.loggers.keys.map { $0 } == [.mock])
+    }
+    
+    @Test("Test logging with set levels")
+    func testSettingLogLevels() {
+        let sut = LoggerService(subsystem: subsystem)
+        sut.set(levels: .info)
+        sut.log(category: .mock, message: "Test message", error: nil, level: .debug)
+        #expect(sut.loggers.keys.map { $0 } != [.mock])
+        
+        sut.set(levels: .debug, .default)
+        sut.log(category: .mock, message: "Test message", error: nil, level: .info)
+        #expect(sut.loggers.keys.map { $0 } != [.mock])
+        
+    }
 }
