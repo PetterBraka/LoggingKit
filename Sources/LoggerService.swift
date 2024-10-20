@@ -10,11 +10,13 @@ import OSLog
 public final class LoggerService: LoggerServicing {
     private let subsystem: String
     internal private(set) var loggers: [LogCategory: Logger]
+    internal private(set) var logLevels: Set<LogLevel>
     internal private(set) var enabledCategories: Set<LogCategory>
     
     public init(subsystem: String) {
         self.subsystem = subsystem
         self.loggers = [:]
+        self.logLevels = [.debug, .info, .default, .error, .fault]
         self.enabledCategories = [.default]
     }
     
@@ -32,8 +34,13 @@ public final class LoggerService: LoggerServicing {
         }
     }
     
+    public func set(levels: LogLevel...) {
+        logLevels = Set(levels)
+    }
+    
     public func log(category: LogCategory, message: String, error: Error?, level: LogLevel) {
-        guard enabledCategories.contains(category) || enabledCategories == [.default] else { return }
+        guard logLevels.contains(level), (enabledCategories.contains(category) || enabledCategories == [.default])
+        else { return }
         
         let logger: Logger
         if let oldLogger = loggers[category] {
