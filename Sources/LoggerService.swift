@@ -7,7 +7,7 @@
 
 import OSLog
 
-public final class LoggerService: LoggerServicing {
+public final actor LoggerService: LoggerServicing {
     private let subsystem: String
     internal private(set) var loggers: [LogCategory: Logger]
     internal private(set) var logLevels: Set<LogLevel>
@@ -20,25 +20,25 @@ public final class LoggerService: LoggerServicing {
         self.enabledCategories = [.default]
     }
     
-    public func enable(_ categories: LogCategory...) {
+    public func enable(_ categories: LogCategory...) async {
         enabledCategories.remove(.default)
         for category in categories {
             enabledCategories.insert(category)
         }
     }
     
-    public func disable(_ categories: LogCategory...) {
+    public func disable(_ categories: LogCategory...) async {
         enabledCategories.remove(.default)
         for category in categories {
             enabledCategories.remove(category)
         }
     }
     
-    public func set(levels: LogLevel...) {
+    public func set(levels: LogLevel...) async {
         logLevels = Set(levels)
     }
     
-    public func log(category: LogCategory, message: String, error: Error?, level: LogLevel) {
+    public func log(category: LogCategory, message: String, error: Error?, level: LogLevel) async {
         guard logLevels.contains(level), (enabledCategories.contains(category) || enabledCategories == [.default])
         else { return }
         

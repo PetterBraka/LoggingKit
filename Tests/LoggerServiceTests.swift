@@ -20,72 +20,72 @@ struct LoggerServiceTests {
     let subsystem = "com.braka.test"
     
     @Test("Test logging", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
-    func testLogging(for category: LogCategory) {
+    func testLogging(for category: LogCategory) async {
         let sut = LoggerService(subsystem: subsystem)
-        sut.log(category: category, message: "Test message", error: nil, level: .debug)
+        await sut.log(category: category, message: "Test message", error: nil, level: .debug)
         
-        #expect(sut.enabledCategories == [.default])
-        #expect(sut.loggers.keys.map { $0 } == [category])
+        await #expect(sut.enabledCategories == [.default])
+        await #expect(sut.loggers.keys.map { $0 } == [category])
     }
     
     @Test("Test logging for enabling categories", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
-    func testEnablingLogging(for category: LogCategory) {
+    func testEnablingLogging(for category: LogCategory) async {
         let sut = LoggerService(subsystem: subsystem)
-        sut.enable(category)
-        sut.log(category: category, message: "Test message", error: nil, level: .debug)
+        await sut.enable(category)
+        await sut.log(category: category, message: "Test message", error: nil, level: .debug)
         
-        #expect(sut.enabledCategories == [category])
-        #expect(sut.loggers.keys.map { $0 } == [category])
+        await #expect(sut.enabledCategories == [category])
+        await #expect(sut.loggers.keys.map { $0 } == [category])
     }
     
     @Test("Test logging for disabled categories", arguments: [LogCategory.mock, .mock1, .mock2, .mock3])
-    func testDisablingLogging(for category: LogCategory) {
+    func testDisablingLogging(for category: LogCategory) async {
         let sut = LoggerService(subsystem: subsystem)
-        sut.disable(category)
-        sut.log(category: category, message: "Test message", error: nil, level: .debug)
+        await sut.disable(category)
+        await sut.log(category: category, message: "Test message", error: nil, level: .debug)
         
-        #expect(sut.enabledCategories != [category])
-        #expect(sut.loggers.keys.map { $0 } != [category])
+        await #expect(sut.enabledCategories != [category])
+        await #expect(sut.loggers.keys.map { $0 } != [category])
     }
     
     @Test("Test enabling multiple categories")
     func testEnablingMultipleCategories() async throws {
         let sut = LoggerService(subsystem: subsystem)
-        sut.enable(.mock, .mock1, .mock2, .mock3)
+        await sut.enable(.mock, .mock1, .mock2, .mock3)
         
-        #expect(sut.enabledCategories == [.mock, .mock1, .mock2, .mock3])
+        await #expect(sut.enabledCategories == [.mock, .mock1, .mock2, .mock3])
     }
     
     @Test("Test disabling multiple categories")
     func testDisablinggMultipleCategories() async throws {
         let sut = LoggerService(subsystem: subsystem)
-        sut.enable(.mock, .mock1, .mock2, .mock3)
+        await sut.enable(.mock, .mock1, .mock2, .mock3)
         
-        #expect(sut.enabledCategories == [.mock, .mock1, .mock2, .mock3])
+        await #expect(sut.enabledCategories == [.mock, .mock1, .mock2, .mock3])
         
-        sut.disable(.mock1, .mock3)
-        #expect(sut.enabledCategories == [.mock, .mock2])
+        await sut.disable(.mock1, .mock3)
+        await #expect(sut.enabledCategories == [.mock, .mock2])
     }
     
     @Test("Test logging with set level", arguments: [LogLevel.info, .debug, .default, .fault, .error])
-    func testSettingLogLevel(for level: LogLevel) {
+    func testSettingLogLevel(for level: LogLevel) async {
         let sut = LoggerService(subsystem: subsystem)
-        sut.set(levels: level)
-        sut.log(category: .mock, message: "Test message", error: nil, level: level)
+        await sut.set(levels: level)
+        await sut.log(category: .mock, message: "Test message", error: nil, level: level)
         
-        #expect(sut.loggers.keys.map { $0 } == [.mock])
+        await #expect(sut.loggers.keys.map { $0 } == [.mock])
     }
     
     @Test("Test logging with set levels")
-    func testSettingLogLevels() {
+    func testSettingLogLevels() async {
         let sut = LoggerService(subsystem: subsystem)
-        sut.set(levels: .info)
-        sut.log(category: .mock, message: "Test message", error: nil, level: .debug)
-        #expect(sut.loggers.keys.map { $0 } != [.mock])
+        await sut.set(levels: .info)
+        await sut.log(category: .mock, message: "Test message", error: nil, level: .debug)
+        await #expect(sut.loggers.keys.map { $0 } != [.mock])
         
-        sut.set(levels: .debug, .default)
-        sut.log(category: .mock, message: "Test message", error: nil, level: .info)
-        #expect(sut.loggers.keys.map { $0 } != [.mock])
+        await sut.set(levels: .debug, .default)
+        await sut.log(category: .mock, message: "Test message", error: nil, level: .info)
+        await #expect(sut.loggers.keys.map { $0 } != [.mock])
         
     }
 }
