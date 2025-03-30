@@ -5,7 +5,7 @@
 //  Created by Petter vang Brakalsvålet on 16/10/2024.
 //
 
-public protocol LoggerServicing {
+public protocol LoggerServicing: Sendable {
     
     /// Enable logging for specific categories
     func enable(_ categories: LogCategory...)

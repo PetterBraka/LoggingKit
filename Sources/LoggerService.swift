@@ -7,39 +7,59 @@
 
 import OSLog
 
-public final class LoggerService: LoggerServicing {
+public final actor LoggerService {
     private let subsystem: String
     internal private(set) var loggers: [LogCategory: Logger]
     internal private(set) var logLevels: Set<LogLevel>
     internal private(set) var enabledCategories: Set<LogCategory>
     
-    public init(subsystem: String) {
+    public init(subsystem: String, levels: Set<LogLevel> = .default, categories: Set<LogCategory> = .default) {
         self.subsystem = subsystem
         self.loggers = [:]
-        self.logLevels = [.debug, .info, .default, .error, .fault]
-        self.enabledCategories = [.default]
+        self.logLevels = levels
+        self.enabledCategories = categories
+    }
+}
+
+extension LoggerService: LoggerServicing {
+    nonisolated public func enable(_ categories: LogCategory...) {
+        Task { await self._enable(categories) }
     }
     
-    public func enable(_ categories: LogCategory...) {
-        enabledCategories.remove(.default)
+    nonisolated public func disable(_ categories: LogCategory...) {
+        Task { await self._disable( categories) }
+    }
+    
+    nonisolated public func set(levels: LogLevel...) {
+        Task { await self._set(levels: levels) }
+    }
+    
+    nonisolated public func log(category: LogCategory, message: String, error: Error?, level: LogLevel) {
+        Task { await self._log(category: category, message: message, error: error, level: level) }
+    }
+}
+
+private extension LoggerService {
+    func _enable(_ categories: [LogCategory]) async {
+        enabledCategories.removeAll()
         for category in categories {
             enabledCategories.insert(category)
         }
     }
     
-    public func disable(_ categories: LogCategory...) {
-        enabledCategories.remove(.default)
+    func _disable(_ categories: [LogCategory]) async {
         for category in categories {
             enabledCategories.remove(category)
         }
     }
     
-    public func set(levels: LogLevel...) {
+    func _set(levels: [LogLevel]) async {
         logLevels = Set(levels)
     }
     
-    public func log(category: LogCategory, message: String, error: Error?, level: LogLevel) {
-        guard logLevels.contains(level), (enabledCategories.contains(category) || enabledCategories == [.default])
+    func _log(category: LogCategory, message: String, error: Error?, level: LogLevel) async {
+        guard logLevels.contains(level),
+              enabledCategories.contains(category)
         else { return }
         
         let logger: Logger
