@@ -14,7 +14,10 @@ public struct LogCategory: Sendable, Hashable {
 }
 
 extension LogCategory {
-    
     /// Default is used to enable logging of any categories.
     static let `default` = LogCategory("default")
+}
+
+public extension Set where Element == LogCategory {
+    static let `default`: Self = [.default]
 }

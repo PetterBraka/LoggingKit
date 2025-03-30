@@ -26,3 +26,7 @@ extension OSLogType {
         }
     }
 }
+
+public extension Set where Element == LogLevel {
+    static let `default`: Self = [.debug, .info, .default, .error, .fault]
+}
